@@ -6,12 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct wl_output {
-	size_t len, count;
-};
-
 static void fl(FILE *fp);
-static struct wl_output wl(const char *str, size_t *restrict handled);
 
 static size_t ll = 79;
 
@@ -32,13 +27,15 @@ fl(FILE *fp)
 			fwrite(line, 1, handled, stdout);
 		}
 
-		struct wl_output ret;
 		for (;;) {
-			ret = wl(line, &handled);
-			if (ret.count == 0)
+			size_t tlen = 0, tcount = 0;
+			for (; line[handled] == ' '; ++handled);
+			if (line[handled] == '\n' || line[handled] == '\0')
 				break; /* current line empty */
+			for (; line[handled + tlen] != ' ' && line[handled + tlen] != '\n' && line[handled + tlen] != '\0'; ++tlen)
+				tcount += (line[handled + tlen] & 0xc0) != 0x80;
 
-			if (count + ret.count >= ll) {
+			if (count + tcount >= ll) {
 				fputc('\n', stdout);
 				count = 0;
 			} else if (count != 0) { /* prevent extra on para */
@@ -46,24 +43,10 @@ fl(FILE *fp)
 				++count;
 			}
 
-			fwrite(line + handled, 1, ret.len, stdout);
-			handled += ret.len, count += ret.count;
+			fwrite(line + handled, 1, tlen, stdout);
+			handled += tlen, count += tcount;
 		}
 	}
-}
-
-static struct wl_output
-wl(const char *str, size_t *restrict handled)
-{
-	size_t len = 0, count = 0;
-	while ((str[*handled] == ' ' || str[*handled] == '\n') &&
-			str[*handled] != '\0')
-		++*handled; /* ignore leading space */
-	while (str[*handled + len] != ' ' && str[*handled + len] != '\n' &&
-			str[*handled + len] != '\0')
-		count += (str[*handled + len] & 0xc0) != 0x80, ++len;
-	struct wl_output output = { len, count };
-	return output;
 }
 
 int

@@ -29,7 +29,7 @@ rev(FILE *fp)
 		if (utfc != 0) /* handle unflushed UTF-8 glyph */
 			fwrite(line, 1, utfc, stdout);
 		if (line[nread - 1] == '\n') /* handle final line of file */
-			fputc('\n', stdout);
+			putchar('\n');
 	}
 	fclose(fp);
 }

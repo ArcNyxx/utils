@@ -21,8 +21,10 @@ fl(FILE *fp)
 
 		/* output leading spaces on new paragraph */
 		if (nread == 1) {
-			fwrite("\n\n", 1, 2, stdout);
-			nread = getline(&line, &size, fp), count = 0;
+			do {
+				fwrite("\n\n", 1, 2, stdout);
+				count = 0;
+			} while((nread = getline(&line, &size, fp)) == 1);
 
 			for (han = 0; line[han] == ' '; ++han)
 				++count;
@@ -39,12 +41,14 @@ fl(FILE *fp)
 					'\n' && line[han + len] != '\0'; ++len)
 				tcount += (line[han + len] & 0xc0) != 0x80;
 
-			if (count + tcount >= ll) {
-				fputc('\n', stdout);
-				count = 0;
-			} else if (count != 0) { /* prevent starting space */
-				fputc(' ', stdout);
-				++count;
+			if (count != 0) { /* prevent extra space and newline */
+				if (count + tcount >= ll) {
+					putchar('\n');
+					count = 0;
+				} else {
+					putchar(' ');
+					++count;
+				}
 			}
 
 			fwrite(line + han, 1, len, stdout);
@@ -56,7 +60,7 @@ fl(FILE *fp)
 int
 main(int argc, char **argv)
 {
-	if (!strcmp(argv[1], "-w") && argv[2] != NULL)
+	if (argv[1] != NULL && argv[2] != NULL && !strcmp(argv[1], "-w"))
 		if ((ll = strtoull(argv[2], NULL, 10)) == 0) {
 			fprintf(stderr, "fl: invalid width %s\n", argv[2]);
 			return 1;

@@ -19,14 +19,13 @@ fl(FILE *fp)
 	while ((nread = getline(&line, &size, fp)) > 0) {
 		han = 0;
 
-		/* output leading spaces on new paragraph */
-		if (nread == 1) {
-			do {
-				fwrite("\n\n", 1, 2, stdout);
-				count = 0;
-			} while((nread = getline(&line, &size, fp)) == 1);
+		/* output leading spaces on new paragraph
+		 * prevents starting new paragraph at start of file */
+		if (nread == 1 && count != 0) {
+			while ((nread = getline(&line, &size, fp)) == 1);
+			fwrite("\n\n", 1, 2, stdout);
 
-			for (han = 0; line[han] == ' '; ++han)
+			for (count = han = 0; line[han] == ' '; ++han)
 				++count;
 			fwrite(line, 1, han, stdout);
 		}
@@ -55,6 +54,8 @@ fl(FILE *fp)
 			han += len, count += tcount;
 		}
 	}
+	putchar('\n');
+	fclose(fp);
 }
 
 int

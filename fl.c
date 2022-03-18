@@ -14,7 +14,7 @@ static void
 fl(FILE *fp)
 {
 	char *line = NULL;
-	size_t size = 0, count = 0, han = 0;
+	size_t size = 0, count = 0, han;
 	ssize_t nread = 0;
 	while ((nread = getline(&line, &size, fp)) > 0) {
 		han = 0;
@@ -34,7 +34,7 @@ fl(FILE *fp)
 			while (line[han] == ' ')
 				++han;
 			if (line[han] == '\n' || line[han] == '\0')
-				break; /* current line empty */
+				break; /* current line empty, get new */
 			for (; line[han + len] != ' ' && line[han + len] !=
 					'\n' && line[han + len] != '\0'; ++len)
 				tcount += (line[han + len] & 0xc0) != 0x80;
@@ -42,7 +42,7 @@ fl(FILE *fp)
 			if (count + tcount >= ll) {
 				fputc('\n', stdout);
 				count = 0;
-			} else if (count != 0) { /* prevent extra on para */
+			} else if (count != 0) { /* prevent starting space */
 				fputc(' ', stdout);
 				++count;
 			}

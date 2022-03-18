@@ -56,12 +56,12 @@ fl(FILE *fp)
 int
 main(int argc, char **argv)
 {
-	if (!strncmp(argv[1], "--width=", 8))
-		if ((ll = strtoull(&argv[1][8], NULL, 10)) == 0) {
-			fprintf(stderr, "fl: invalid width %s\n", &argv[1][8]);
+	if (!strcmp(argv[1], "-w") && argv[2] != NULL)
+		if ((ll = strtoull(argv[2], NULL, 10)) == 0) {
+			fprintf(stderr, "fl: invalid width %s\n", argv[2]);
 			return 1;
 		} else {
-			argc -= 1, argv = &argv[1]; /* realign argv */
+			argc -= 2, argv = &argv[2]; /* realign argv */
 		}
 
 	FILE *fp;

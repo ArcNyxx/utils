@@ -1,0 +1,29 @@
+.\" fl - format line length
+.\" Copyright (C) 2022 ArcNyxx
+.\" see LICENCE file for licensing information
+.TH FL 1 fl\-VERSION
+.SH NAME
+fl \- format line length
+.SH SYNOPSIS
+.SY fl
+.OP \-w width
+.RI [ file ...]
+.YS
+.SH DESCRIPTION
+.BR fl (1)
+reformats and writed each paragraph in the specified files to standard output.
+If no files are specified, standard input is read.  A single dash stands for
+standard input when specified as a file.
+.PP
+Paragraphs are separated by two newlines and the start of each maintains any
+indentation.  Lines are a maximum 79 characters long by default, which can be
+modified by specifying the
+.BI "\-w " width
+argument.
+.SH OPTIONS
+.TP
+.BI "\-w " width
+Set the maximum line length to
+.IR width .
+.SH AUTHOR
+Written by ArcNyxx.

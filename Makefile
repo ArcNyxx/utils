@@ -49,8 +49,9 @@ install:
 		fi; \
 	done
 	for PAGE in $(MAN); do \
-		if [ -e "$$(echo "$$UTIL" | cut -d. -f1)" ]; then \
-			cp -f $$PAGE $(DESTDIR)$(MANPREFIX)/man1; \
+		if [ -e "$$(echo "$$PAGE" | cut -d. -f1)" ]; then \
+			cat $$PAGE | sed 's/VERSION/$(VERSION)/g' > \
+				$(DESTDIR)$(MANPREFIX)/man1/$$PAGE; \
 			chmod 644 $(DESTDIR)$(MANPREFIX)/man1/$$PAGE; \
 		fi; \
 	done

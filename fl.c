@@ -14,26 +14,30 @@ static void
 fl(FILE *fp)
 {
 	char *line = NULL;
-	size_t size = 0, count = 0, handled = 0;
+	size_t size = 0, count = 0, han = 0;
 	ssize_t nread = 0;
-	for (; (nread = getline(&line, &size, fp)) > 0; handled = 0) {
+	while ((nread = getline(&line, &size, fp)) > 0) {
+		han = 0;
+
 		/* output leading spaces on new paragraph */
 		if (nread == 1) {
 			fwrite("\n\n", 1, 2, stdout);
 			nread = getline(&line, &size, fp), count = 0;
 
-			for (handled = 0; line[handled] == ' '; ++handled)
+			for (han = 0; line[han] == ' '; ++han)
 				++count;
-			fwrite(line, 1, handled, stdout);
+			fwrite(line, 1, han, stdout);
 		}
 
 		for (;;) {
-			size_t tlen = 0, tcount = 0;
-			for (; line[handled] == ' '; ++handled);
-			if (line[handled] == '\n' || line[handled] == '\0')
+			size_t len = 0, tcount = 0;
+			while (line[han] == ' ')
+				++han;
+			if (line[han] == '\n' || line[han] == '\0')
 				break; /* current line empty */
-			for (; line[handled + tlen] != ' ' && line[handled + tlen] != '\n' && line[handled + tlen] != '\0'; ++tlen)
-				tcount += (line[handled + tlen] & 0xc0) != 0x80;
+			for (; line[han + len] != ' ' && line[han + len] !=
+					'\n' && line[han + len] != '\0'; ++len)
+				tcount += (line[han + len] & 0xc0) != 0x80;
 
 			if (count + tcount >= ll) {
 				fputc('\n', stdout);
@@ -43,8 +47,8 @@ fl(FILE *fp)
 				++count;
 			}
 
-			fwrite(line + handled, 1, tlen, stdout);
-			handled += tlen, count += tcount;
+			fwrite(line + han, 1, len, stdout);
+			han += len, count += tcount;
 		}
 	}
 }

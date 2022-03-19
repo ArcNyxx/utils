@@ -19,28 +19,24 @@ fl(FILE *fp)
 	while ((nread = getline(&line, &size, fp)) > 0) {
 		han = 0;
 
-		/* output leading spaces on new paragraph
-		 * prevents starting new paragraph at start of file */
+		/* count check skips newlines at start of file */
 		if (nread == 1 && count != 0) {
 			while ((nread = getline(&line, &size, fp)) == 1);
-			fwrite("\n\n", 1, 2, stdout);
-
 			for (count = han = 0; line[han] == ' '; ++han)
 				++count;
-			fwrite(line, 1, han, stdout);
+			fwrite("\n\n", 1, 2, stdout);
+			fwrite(line, 1, han, stdout); /* output indent */
 		}
 
-		for (;;) {
-			size_t len = 0, tcount = 0;
-			while (line[han] == ' ')
-				++han;
+		for (size_t len = 0, tcount = 0; ; len = tcount = 0) {
+			for (; line[han] == ' '; ++han); /* skip spaces */
 			if (line[han] == '\n' || line[han] == '\0')
 				break; /* current line empty, get new */
 			for (; line[han + len] != ' ' && line[han + len] !=
 					'\n' && line[han + len] != '\0'; ++len)
 				tcount += (line[han + len] & 0xc0) != 0x80;
 
-			if (count != 0) { /* prevent extra space and newline */
+			if (count != 0) /* skip on first iteration */
 				if (count + tcount >= ll) {
 					putchar('\n');
 					count = 0;
@@ -48,7 +44,6 @@ fl(FILE *fp)
 					putchar(' ');
 					++count;
 				}
-			}
 
 			fwrite(line + han, 1, len, stdout);
 			han += len, count += tcount;

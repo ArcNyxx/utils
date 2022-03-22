@@ -6,12 +6,12 @@
 
 include config.mk
 
-SRC = fl.c rev.c
-OBJ = fl.o rev.o
-OUT = fl   rev
-MAN = fl.1 rev.1
+SRC = fl.c jf.c rev.c
+OBJ = fl.o jf.o rev.o
+OUT = fl   jf   rev
+MAN = fl.1 jf.1 rev.1
 
-all: fl rev
+all: fl jf rev
 
 options:
 	@echo utils build options:
@@ -29,6 +29,9 @@ fl: fl.o
 
 rev: rev.o
 	$(CC) rev.o -o $@ $(LDFLAGS)
+
+jf: jf.o
+	$(CC) jf.o -o $@ $(LDFLAGS)
 
 clean:
 	rm -f $(OUT) $(OBJ) utils-*.tar.gz

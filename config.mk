@@ -2,7 +2,7 @@
 # Copyright (C) 2022 ArcNyxx
 # see LICENCE file for licensing information
 
-VERSION = 1.0
+VERSION = 1.0.1
 
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man

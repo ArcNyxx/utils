@@ -6,12 +6,12 @@
 
 include config.mk
 
-SRC = fl.c jf.c rev.c
-OBJ = fl.o jf.o rev.o
-OUT = fl   jf   rev
-MAN = fl.1 jf.1 rev.1
+SRC = fl.c rev.c
+OBJ = fl.o rev.o
+OUT = fl   rev
+MAN = fl.1 rev.1
 
-all: fl jf rev
+all: fl rev
 
 options:
 	@echo utils build options:
@@ -52,7 +52,7 @@ install:
 		fi; \
 	done
 	for PAGE in $(MAN); do \
-		if [ -e "$$(echo "$$PAGE" | cut -d. -f1)" ]; then \
+		if [ -e "$${PAGE%%.*}" ]; then \
 			cat $$PAGE | sed 's/VERSION/$(VERSION)/g' > \
 				$(DESTDIR)$(MANPREFIX)/man1/$$PAGE; \
 			chmod 644 $(DESTDIR)$(MANPREFIX)/man1/$$PAGE; \

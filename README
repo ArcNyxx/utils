@@ -1,40 +1,14 @@
-utils - miscellaneous utilities
-===============================
-utils is a variety of utilities written in compiled languages.  Below is a list
-of utilities included:
-
-    fl:  format line length
-    rev: reverse characterwise
-
+utils - simple utilities
+========================
+utils is a compilation of scripts written in compiled languages.
 
 Installation
 ------------
-Edit config.mk to match your local setup.  Root privileges are required to
-install utils.
+utils comes with a Makefile and config.mk file for configurable building and
+testing.  Edit the latter to match your local setup (utils are installed into
+the /usr/local namespace by default, you may need to modify your $PATH).
 
-utils are installed into the /usr/local namespace by default.  To change this,
-such as to install into the /usr namespace, edit config.mk in the following
-manner:
+utils can be built and installed with the following command (run as root):
 
-    - PREFIX = /usr/local
-    + PREFIX = /usr
-
-To install utils, run the following commands:
-
-    make [util] # must be run due to granular program building control
-    rd make install
-
-
-To entirely uninstall utils, including both executables and documentation
-pages, run the following command:
-
-    rd make uninstall
-
-
-Bug Reporting
--------------
-Pull requests, issues or bug reports, and branches are always welcome!  The
-main development branch of utils can be found at the following web address:
-
-    https://github.com/arcnyxx/utils
+    make clean [util...] install
 

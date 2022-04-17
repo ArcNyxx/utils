@@ -30,9 +30,6 @@ fl: fl.o
 rev: rev.o
 	$(CC) rev.o -o $@ $(LDFLAGS)
 
-jf: jf.o
-	$(CC) jf.o -o $@ $(LDFLAGS)
-
 clean:
 	rm -f $(OUT) $(OBJ) utils-*.tar.gz
 
